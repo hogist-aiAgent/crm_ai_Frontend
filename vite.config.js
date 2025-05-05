@@ -6,13 +6,5 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(),  tailwindcss(),],
   base: '/aidashboard/',
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://6d05-49-204-118-99.ngrok-free.app',
-        changeOrigin: true,
-        secure: false
-      }
-    }
-  }
+  
 })
