@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, BrowserRouter } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Dashboard from "./Dashboard/Dashboard";
 import { LoginPage } from "./components/LoginPage";
@@ -25,9 +25,8 @@ function App() {
                 pauseOnHover
                 theme="dark"
             />
-            <Router>
+            <BrowserRouter basename="/aidashboard">
                 <Routes>
-
                     <Route
                         path="/ai-login"
                         element={
@@ -46,7 +45,7 @@ function App() {
                     />
                     <Route path="*" element={<Navigate to="/ai-login" />} />
                 </Routes>
-            </Router>
+            </BrowserRouter>
         </div>
     );
 }
