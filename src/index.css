@@ -34,6 +34,7 @@
   box-shadow: 5px -5px 0px rgba(0, 0, 0, 2);
 
 }
+
 .tag::before {
   background: #008236;
   left: -1.225rem;

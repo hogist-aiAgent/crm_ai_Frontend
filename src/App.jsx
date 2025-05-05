@@ -29,22 +29,22 @@ function App() {
                 <Routes>
 
                     <Route
-                        path="/login"
+                        path="/ai-login"
                         element={
                             isAuthenticated ? (
-                                <Navigate to="/dashboard" />
+                                <Navigate to="/ai-dashboard" />
                             ) : (
                                 <LoginPage setIsAuthenticated={setIsAuthenticated} />
                             )
                         }
                     />
                     <Route
-                        path="/dashboard"
+                        path="/ai-dashboard"
                         element={
-                            isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
+                            isAuthenticated ? <Dashboard /> : <Navigate to="/ai-login" />
                         }
                     />
-                    <Route path="*" element={<Navigate to="/login" />} />
+                    <Route path="*" element={<Navigate to="/ai-login" />} />
                 </Routes>
             </Router>
         </div>

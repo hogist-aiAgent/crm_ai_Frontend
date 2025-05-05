@@ -48,7 +48,7 @@ const Dashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("isLoggedIn");
-        navigate("/login");
+        navigate("/ai-login");
         window.location.reload();
     };
 
@@ -123,7 +123,7 @@ const Dashboard = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="flex flex-col ">
+                        <div className="flex flex-col justify-center items-center">
                             {/* <button className={`py-3 pl-4 px-1 flex items-center gap-4 my-2 cursor-pointer  justify-left }`} onClick={HandlefetchData}>
                                 <span className="transition-all duration-300 ease-in-out transform" >
                                     <FaGetPocket size={24} />
@@ -136,7 +136,7 @@ const Dashboard = () => {
                             </button> */}
                             <div className="relative z-50 overflow-visible" ref={profileRef}>
                                 <button
-                                    className="py-2 pl-4 flex items-center gap-4 my-2 justify-left cursor-pointer"
+                                    className="py-2 pl-4 flex items-center gap-4 my-2 justify-start cursor-pointer"
                                     onClick={() => setIsActive((prev) => !prev)}
                                 >
                                     <span className="transition-all duration-300 ease-in-out transform">
