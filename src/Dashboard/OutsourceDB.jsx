@@ -217,13 +217,19 @@ export const OutsourceDB = () => {
                         </thead>
                         <tbody>
                             {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                                filteredData.map((row, index) => (
+                                filteredData.filter((row) => {
+                                    const isValid = row.contact_number && row.contact_number.length === 10;
+                                    if (!isValid) {
+                                      console.warn("❌ Skipping invalid number:", row.contact_number);
+                                    }
+                                    return isValid;
+                                  }).map((row, index) => (
                                     <tr key={index} className="hover:bg-gray-900">
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.name || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.org_name || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.designation || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.Address || "N/A"}</td>
-                                        <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.contact_number}</td>
+                                        <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.contact_number && row.contact_number.length === 10 ? row.contact_number : "Invalid"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.mail_id || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm font-medium">
                                             <span className={`px-3 py-1 rounded-full capitalize text-white

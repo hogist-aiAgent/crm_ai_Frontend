@@ -53,7 +53,7 @@ const UploadFile = () => {
 
     }
    
-    console.log("Uploading file:", file);
+    // console.log("Uploading file:", file);
     
   };
 
