@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 import { BiRefresh } from "react-icons/bi";
+import { FaDeleteLeft } from "react-icons/fa6";
+import { FcDeleteRow } from "react-icons/fc";
+import { FiDelete } from "react-icons/fi";
+import { LuDelete } from "react-icons/lu";
+import { MdDelete } from "react-icons/md";
+import { RiDeleteBack2Fill, RiDeleteBinLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 
 export const OutsourceDB = () => {
@@ -20,7 +26,7 @@ export const OutsourceDB = () => {
         }
         toast.info("📞 Calling process started...");
         setStart(true);
-    
+
         try {
             const response = await fetch("https://hogist.com/food-api/call-ai-agent/", {
                 method: "GET",
@@ -28,9 +34,9 @@ export const OutsourceDB = () => {
                     "ngrok-skip-browser-warning": "true"
                 }
             });
-    
+
             const result = await response.json();
-    
+
             if (response.ok) {
                 toast.success("✅ Call process triggered successfully");
                 console.log("✅ Backend call sequencing started:", result);
@@ -38,15 +44,15 @@ export const OutsourceDB = () => {
                 toast.error("❌ Failed to trigger call process");
                 console.error("Error response:", result);
             }
-    
+
         } catch (err) {
             toast.error("❌ Error starting call process");
             console.error("❌ Fetch error:", err);
         }
-    
+
         setStart(false);
     };
-    
+
 
 
     const stopCall = async () => {
@@ -97,11 +103,40 @@ export const OutsourceDB = () => {
             setLoading(false);  // <-- Stop loader
         }
     };
-    
+
 
     useEffect(() => {
         fetchData();  // initial load
     }, []);
+
+    const deleteLead = async (phone) => {
+        if (!window.confirm("Are you sure you want to delete this lead?")) return;
+
+        try {
+            const response = await fetch("https://hogist.com/food-api/delete-outsource-lead/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
+                },
+                body: JSON.stringify({ contact_number: phone })  // Assuming contact_number is the identifier
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                toast.success("✅ Lead deleted successfully");
+                fetchData(); // Refresh table
+            } else {
+                toast.error("❌ Failed to delete lead");
+                console.error("Error:", result);
+            }
+        } catch (err) {
+            toast.error("❌ Network error while deleting lead");
+            console.error("❌ Delete error:", err);
+        }
+    };
+
 
 
     if (loading) return <div className="flex justify-center items-center h-screen w-full">
@@ -134,16 +169,16 @@ export const OutsourceDB = () => {
             <div className="flex justify-between gap-10">
 
                 <div className="flex items-center gap-5">
-                <select value={filter} onChange={(e) => setFilter(e.target.value)} className="cursor-pointer  border rounded border-white py-1 px-4 my-2 ">
-                    <option value="year" className=" cursor-pointer bg-black">This Year</option>
-                    <option value="month" className="cursor-pointer bg-black">This Month</option>
-                    <option value="today" className=" cursor-pointer appearance-none focus:outline-none  bg-black">Today</option>
-                </select>
-                <button
+                    <select value={filter} onChange={(e) => setFilter(e.target.value)} className="cursor-pointer  border rounded border-white py-1 px-4 my-2 ">
+                        <option value="year" className=" cursor-pointer bg-black">This Year</option>
+                        <option value="month" className="cursor-pointer bg-black">This Month</option>
+                        <option value="today" className=" cursor-pointer appearance-none focus:outline-none  bg-black">Today</option>
+                    </select>
+                    <button
                         className=" border border-white text-white px-4 py-1 text-md rounded cursor-pointer  my-2"
                         onClick={fetchData}
                     >
-                        <BiRefresh size={24}/>
+                        <BiRefresh size={24} />
                     </button>
                 </div>
                 <div className="flex flex-col md:flex-row md:gap-5 ">
@@ -164,17 +199,18 @@ export const OutsourceDB = () => {
                 </div>
             </div>
             <div className="overflow-x-auto">
-                <div className="h-[73vh] overflow-y-auto border border-gray-300">
+                <div className="h-[73vh] overflow-y-auto border-2 border-gray-800">
                     <table className="w-full min-w-[1200px] ">
-                        <thead className="bg-gray-200 sticky top-0 z-10">
+                        <thead className="bg-gray-800 sticky top-0 z-10">
                             <tr>
                                 {[
                                     "Name", "Organization", "Designation", "Address",
                                     "Contact Number", "Email", "Status", "Source",
-                                    "Created At"
+                                    "Created At", "Actions"
                                 ].map((header, index) => (
-                                    <th key={index} className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider whitespace-nowrap">
+                                    <th key={index} className="px-3 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider whitespace-nowrap">
                                         {header}
+
                                     </th>
                                 ))}
                             </tr>
@@ -200,6 +236,15 @@ export const OutsourceDB = () => {
 
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.source_come_from || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{new Date(row.created_at).toLocaleString()}</td>
+                                        <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">
+                                            <button
+                                                className="bg-red-700 hover:bg-red-800 text-white px-3 py-1 rounded"
+                                                onClick={() => deleteLead(row.contact_number)}
+                                            >
+                                                <RiDeleteBinLine size={20}/>
+                                            </button>
+                                        </td>
+
                                     </tr>
                                 ))
                             ) : (

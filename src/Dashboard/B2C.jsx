@@ -213,12 +213,12 @@ export const B2C = () => {
             </div>
 
             <div className="overflow-x-auto">
-                <div className="h-[73vh] overflow-y-auto border border-gray-300">
+                <div className="h-[73vh] overflow-y-auto border-2 border-gray-800">
                     <table className="w-full min-w-[1200px] ">
-                        <thead className="bg-gray-200 sticky top-0 z-10">
+                        <thead className="bg-gray-800 sticky top-0 z-10">
                             <tr>
                                 {headers.map((header, index) => (
-                                    <th key={index} className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider whitespace-nowrap">
+                                    <th key={index} className="px-3 py-3 text-left text-xs font-normal text-gray-200 uppercase tracking-wider whitespace-nowrap">
                                         <div className="flex items-center">
                                             {header}
                                             {header === "Lead Score" && (
@@ -235,7 +235,7 @@ export const B2C = () => {
                                                         <FaFilter />
                                                     </button>
                                                     {dropdownOpen && (
-                                                        <div className="absolute z-20 mt-2 w-48 bg-white border border-gray-300 rounded shadow p-2">
+                                                        <div className="absolute z-20 mt-2 w-48 bg-gray-800 border border-gray-200 rounded shadow p-2">
                                                             {["hot", "warm", "cold", "not interested"].map((status) => (
                                                                 <label key={status} className="block text-sm capitalize">
                                                                     <input
