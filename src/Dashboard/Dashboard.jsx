@@ -123,20 +123,10 @@ const Dashboard = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="flex flex-col justify-center items-center">
-                            {/* <button className={`py-3 pl-4 px-1 flex items-center gap-4 my-2 cursor-pointer  justify-left }`} onClick={HandlefetchData}>
-                                <span className="transition-all duration-300 ease-in-out transform" >
-                                    <FaGetPocket size={24} />
-                                </span>
-                                <span
-                                    className={`font-medium transition-all duration-300 ease-in-out origin-left ${isCollapsed ? 'opacity-0 scale-x-0 w-0' : 'opacity-100 scale-x-100 w-auto'
-                                        } overflow-hidden whitespace-nowrap`}>
-                                    Fetch
-                                </span>
-                            </button> */}
+                        <div className="flex flex-col justify-center items-start">
                             <div className="relative z-50 overflow-visible" ref={profileRef}>
                                 <button
-                                    className="py-2 pl-4 flex items-center gap-4 my-2 justify-start cursor-pointer"
+                                    className="py-2 pl-4 flex items-start gap-4 my-2 justify-start cursor-pointer border-l-4 border-transparent"
                                     onClick={() => setIsActive((prev) => !prev)}
                                 >
                                     <span className="transition-all duration-300 ease-in-out transform">
