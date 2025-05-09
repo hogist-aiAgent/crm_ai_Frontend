@@ -47,7 +47,7 @@ export const WhatsappChatBot = () => {
             <div className="flex w-full h-[93vh] text-white border-2 border-gray-800">
                 {/* Left Panel - Contact List */}
                 <div className="w-1/3 border-r border-gray-800 overflow-y-auto">
-                    <h2 className="text-lg font-semibold p-4 border-b border-gray-800">Chat Contacts</h2>
+                    <h2 className="text-lg font-semibold p-4 border-b border-gray-800 text-green-600">Chat Contacts</h2>
                     {contacts.map((number) => (
                         <button
                             key={number}
