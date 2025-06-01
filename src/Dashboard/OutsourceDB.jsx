@@ -229,7 +229,7 @@ export const OutsourceDB = () => {
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.org_name || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.designation || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.Address || "N/A"}</td>
-                                        <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.contact_number || "Invalid"}</td>
+                                        <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{/^\+91[6-9]\d{9}$/.test(row.contact_number) ? row.contact_number : "Invalid"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm text-gray-200">{row.mail_id || "N/A"}</td>
                                         <td className="px-3 py-5 whitespace-nowrap text-sm font-medium">
                                             <span className={`px-3 py-1 rounded-full capitalize text-white
