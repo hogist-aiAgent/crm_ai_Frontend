@@ -31,7 +31,7 @@ const [toDate, setToDate] = useState("");
   };
 useEffect(()=>{if(searchTerm){
   setCurrentPage(1)
-}},[searchTerm])
+}},[searchTerm,])
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -158,6 +158,7 @@ useEffect(()=>{if(searchTerm){
   };
 
 const filteredData = tableData.filter((row) => {
+ 
   const createdData = new Date(row.created_at);
   const now = new Date();
 
@@ -171,7 +172,7 @@ const filteredData = tableData.filter((row) => {
   } else if (filter === "year") {
     dateMatch = createdData.getFullYear() === now.getFullYear();
   }
-
+//test
   // Filter by fromDate and toDate if provided
   if (fromDate) {
     const from = new Date(fromDate);
@@ -186,7 +187,7 @@ const filteredData = tableData.filter((row) => {
 
   let statusMatch = true;
   if (selectedStatuses.length > 0) {
-    statusMatch = selectedStatuses.includes(row.lead_status?.toLowerCase());
+    statusMatch = selectedStatuses.includes(row.status?.toLowerCase());
   }
 
   const searchMatch = Object.values(row).some((value) =>
@@ -305,6 +306,7 @@ const filteredData = tableData.filter((row) => {
                                     className="mr-2"
                                     checked={selectedStatuses.includes(status)}
                                     onChange={(e) => {
+                                       setCurrentPage(1)
                                       const checked = e.target.checked;
                                       setSelectedStatuses((prev) =>
                                         checked
