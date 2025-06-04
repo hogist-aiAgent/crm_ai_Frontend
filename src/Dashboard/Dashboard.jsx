@@ -213,7 +213,7 @@ const Dashboard = () => {
                                 ))}
                             </div>
                             <div className="mt-auto">
-                                <button onClick={HandlefetchData} className="flex items-center gap-4 py-2 px-4 rounded-md w-full text-white hover:bg-gray-800"
+                                <button  className="flex items-center gap-4 py-2 px-4 rounded-md w-full text-white hover:bg-gray-800"
                          > <FaGetPocket size={18} /> <span>Fetch</span></button>
                                 <button onClick={handleLogout} className="flex items-center gap-4 py-2 px-4 rounded-md w-full text-red-400 hover:bg-gray-800"> <FaUser size={18} /> <span>Logout</span>
                                 </button>
