@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
-import Snackbar from "../components/common/snackBar";
-import DuplicateDialog from "../components/common/DuplicateDialog"; // dialog component
+import Snackbar from "../components/common/SnackBar";
+import DuplicateDialog from "../components/common/DuplicateDialog"; 
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
