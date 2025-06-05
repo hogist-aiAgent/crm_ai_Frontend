@@ -15,14 +15,15 @@ function App() {
     return (
         <div className="bg-black">
             <ToastContainer
-                position="top-right"
+             limit={1} 
+                position="top-center"
                 autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
                 pauseOnFocusLoss
                 draggable
-                pauseOnHover
+                pauseOnHover    
                 theme="dark"
             />
             <BrowserRouter basename="/aidashboard">

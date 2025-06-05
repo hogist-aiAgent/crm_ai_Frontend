@@ -1,9 +1,23 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
+import Snackbar from "../components/common/snackBar";
+
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
+  const [snackbar, setSnackbar] = useState({
+    isOpen: false,
+    message: '',
+    variant: 'error',
+  });
+
+ const showSnackbar = (message, variant = "error") => {
+  if (snackbar.isOpen) return; 
+  setSnackbar({ isOpen: true, message, variant });
+};
+
+  const closeSnackbar = () => setSnackbar({ ...snackbar, isOpen: false });
 
   const onDrop = (acceptedFiles) => {
     setFile(acceptedFiles[0]);
@@ -41,19 +55,15 @@ const UploadFile = () => {
       });
 
       if (response.ok) {
-        const result = await response.json(); // ✅ Parse JSON only on success
+        const result = await response.json();
         toast.success(`✅ ${result.message} (${result.count} leads)`);
         setFile(null);
-        // Optional: Reload the table view or navigate
-        // window.location.href = "/aidashboard/ai-dashboard";
       } else {
         const text = await response.text();
-        console.error("❌ Upload failed. Raw response:", text);
-        toast.error("❌ Upload failed. Please check the file format.");
+        showSnackbar("❌ Upload failed. Please check the file format.");
       }
     } catch (error) {
-      console.error("❌ Upload error:", error);
-      toast.error("❌ Network error during file upload.");
+      showSnackbar("❌ Network error during file upload.");
     }
   };
 
@@ -82,6 +92,13 @@ const UploadFile = () => {
       >
         Upload File
       </button>
+
+      <Snackbar
+        message={snackbar.message}
+        isOpen={snackbar.isOpen}
+        onClose={closeSnackbar}
+        variant={snackbar.variant}
+      />
     </div>
   );
 };
