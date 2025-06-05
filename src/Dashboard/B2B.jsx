@@ -300,7 +300,10 @@ const filteredData = tableData.filter((row) => {
         <div className="relative inline-block w-40">
           <select
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => {
+                 setFromDate("")
+           setToDate("")
+              setFilter(e.target.value)}}
             className="cursor-pointer appearance-none w-full rounded border border-white bg-black text-white py-[6px] px-4 pr-8"
           >
             <option value="year" className="bg-black">

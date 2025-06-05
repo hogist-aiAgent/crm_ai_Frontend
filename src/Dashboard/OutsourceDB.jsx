@@ -7,6 +7,9 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import SearchBar from "../components/common/searchBar";
 import { PhoneIcon, PhoneXMarkIcon } from '@heroicons/react/24/solid';
+import StatusSummaryCards from "../components/common/DashboardCard";
+import CallStatusBarChart from "../components/common/ChartReports";
+import ToggleButtonGroup from "../components/common/ToggleButton";
 export const OutsourceDB = () => {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +32,7 @@ const [toDate, setToDate] = useState("");
     const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(dataBlob, `${fileName}.xlsx`);
   };
+    const [activeView, setActiveView] = useState('table');
 useEffect(()=>{if(searchTerm){
   setCurrentPage(1)
 }},[searchTerm,])
@@ -128,7 +132,10 @@ useEffect(()=>{if(searchTerm){
   useEffect(() => {
     fetchData();
   }, []);
-
+useEffect(()=>{
+setSearchTerm("")
+  
+},[activeView])
   const deleteLead = async (phone) => {
     if (!window.confirm("Are you sure you want to delete this lead?")) return;
 
@@ -217,9 +224,43 @@ const filteredData = tableData.filter((row) => {
   return (
     <div className="px-4 pt-5 ibm">
       <h1 className="font-bold text-4xl text-green-600 text-center py-5">OutSource Database</h1>
+    <div className="flex justify-between items-center flex-wrap-reverse">
+<div>
+    <SearchBar
+    searchBarDisplay={activeView!=="table"}
+  searchTerm={searchTerm}
+  setSearchTerm={setSearchTerm}
+  fromDate={fromDate}
+  toDate={toDate}
+  setFromDate={setFromDate}
+  setToDate={setToDate}
+/>
+</div>
+<div className=" mb-2 sm:mb-0">
 
-      {/* Top Toolbar */}
-      <div className="flex flex-wrap justify-between items-center  gap-x-4  ">
+          <ToggleButtonGroup active={activeView} setActive={setActiveView} />
+</div>
+        </div>
+      
+          {
+
+          activeView==="dashboard"&& 
+
+      <div className="p-1 pb-3">
+      <StatusSummaryCards data={filteredData} />
+<CallStatusBarChart data={tableData} />
+
+      </div>
+        
+        }
+
+    
+          {
+
+          activeView==="table"&& 
+
+     <>
+       <div className="flex flex-wrap justify-between items-center  gap-x-4  ">
         <div className="flex items-center  gap-x-4 flex-wrap w-full ">
              <button
             onClick={() => exportToExcel(filteredData)}
@@ -230,7 +271,10 @@ const filteredData = tableData.filter((row) => {
           <div className="relative inline-block w-40 mb-5 sm:mb-0 ">
             <select
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={(e) =>{
+                    setFromDate("")
+           setToDate("")
+                setFilter(e.target.value)}}
               className="cursor-pointer appearance-none w-full rounded border border-white bg-black text-white py-[6px] px-4 pr-8"
             >
               <option value="year" className="bg-black">This Year</option>
@@ -244,14 +288,8 @@ const filteredData = tableData.filter((row) => {
             </div>
           </div>
 
-          <SearchBar
-  searchTerm={searchTerm}
-  setSearchTerm={setSearchTerm}
-  fromDate={fromDate}
-  toDate={toDate}
-  setFromDate={setFromDate}
-  setToDate={setToDate}
-/>
+
+        
   <button onClick={fetchData} className="border border-white text-white px-4 py-2 rounded">
             <BiRefresh size={20} />
           </button>
@@ -268,6 +306,7 @@ const filteredData = tableData.filter((row) => {
                     >
                         {start ? "Calling..." : "Start Call"}
                     </button>
+                    
         </div>
 
        
@@ -275,13 +314,13 @@ const filteredData = tableData.filter((row) => {
  <div className="flex justify-start gap-3 flex-wrap pb-3">
       
         </div>
-      {/* Table */}
-      <div className="overflow-x-auto">
+       <div className="overflow-x-auto">
         <div className="h-[73vh] overflow-y-auto border-2 border-gray-800">
           <table className="w-full min-w-[1200px]">
             <thead className="bg-gray-800 sticky top-0 z-10">
               <tr>
                 {[
+                  "Id",
                   "Name", "Organization", "Designation", "Address", "Contact Number", "Email",
                   "Status", "Source", "Created At", "Actions"
                 ].map((header, index) => (
@@ -341,6 +380,7 @@ const filteredData = tableData.filter((row) => {
                   .filter((row) => row.contact_number && row.contact_number.length === 10)
                   .map((row, index) => (
                     <tr key={index} className="hover:bg-gray-900">
+                      <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.id || "N/A"}</td>
                       <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.name || "N/A"}</td>
                       <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.org_name || "N/A"}</td>
                       <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.designation || "N/A"}</td>
@@ -458,6 +498,11 @@ const filteredData = tableData.filter((row) => {
             </button>
           </div>
       </div>
+     </>
+        
+        }
+      {/* Table */}
+     
     </div>
   );
 };

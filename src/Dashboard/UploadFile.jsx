@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import Snackbar from "../components/common/snackBar";
-
+import DuplicateDialog from "../components/common/DuplicateDialog"; // dialog component
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
@@ -12,10 +12,13 @@ const UploadFile = () => {
     variant: 'error',
   });
 
- const showSnackbar = (message, variant = "error") => {
-  if (snackbar.isOpen) return; 
-  setSnackbar({ isOpen: true, message, variant });
-};
+  const [duplicates, setDuplicates] = useState([]);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const showSnackbar = (message, variant = "error") => {
+    if (snackbar.isOpen) return;
+    setSnackbar({ isOpen: true, message, variant });
+  };
 
   const closeSnackbar = () => setSnackbar({ ...snackbar, isOpen: false });
 
@@ -56,14 +59,20 @@ const UploadFile = () => {
 
       if (response.ok) {
         const result = await response.json();
-        toast.success(`✅ ${result.message} (${result.count} leads)`);
+        toast.success(`${result.message}`);
+
+        if (result.duplicates && result.duplicates.length > 0) {
+          setDuplicates(result.duplicates);
+          setDialogOpen(true);
+        }
+
         setFile(null);
       } else {
-        const text = await response.text();
-        showSnackbar("❌ Upload failed. Please check the file format.");
+        await response.text(); // read it for completeness
+        showSnackbar(" Upload failed. Please check the file format.");
       }
     } catch (error) {
-      showSnackbar("❌ Network error during file upload.");
+      showSnackbar(" Network error during file upload.");
     }
   };
 
@@ -84,20 +93,29 @@ const UploadFile = () => {
         className="w-60 md:w-80 lg:w-96 h-48 border-2 border-dashed border-gray-500 flex items-center justify-center cursor-pointer"
       >
         <input {...getInputProps()} />
-        {file ? <p>{file.name}</p> : <p>Drag & Drop Excel File Here</p>}
+        {file ? <p>{file.name}</p> : <p>Click or Drag & Drop Excel File Here</p>}
       </div>
-      <button
+      {
+       file?.name&&<button
         onClick={handleUpload}
         className="mt-4 px-4 py-2 bg-green-600 text-white rounded cursor-pointer"
       >
         Upload File
       </button>
+      }
+      
 
       <Snackbar
         message={snackbar.message}
         isOpen={snackbar.isOpen}
         onClose={closeSnackbar}
         variant={snackbar.variant}
+      />
+
+      <DuplicateDialog
+        duplicates={duplicates}
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
       />
     </div>
   );

@@ -205,6 +205,7 @@ const filteredData = tableData.filter((row) => {
   };
 
   const headers = [
+      "Id",
     "Full Name", "Phone Number", "Alternate Number", "Email", "Event Type", "Event Date", "Delivery Location",
     "Count", "Meal Service", "Dietary Options", "Service Choice", "Choice of Menu", "Existing Budget",
     "Preferred Budget", "Meeting Date", "Lead Status", "Status", "Remark", "Created At", "Lead Score", "Call ID"
@@ -228,7 +229,11 @@ const filteredData = tableData.filter((row) => {
       <div className="relative inline-block w-40">
     <select
         value={filter}
-        onChange={(e) => setFilter(e.target.value)}
+        onChange={(e) => {setFilter(e.target.value)
+
+          setFromDate("")
+           setToDate("")
+        }}
         className="cursor-pointer appearance-none w-full rounded border border-white bg-black text-white py-[6px] px-4 pr-8"
     >
         <option value="year" className="bg-black">This Year</option>
@@ -313,6 +318,7 @@ const filteredData = tableData.filter((row) => {
         {paginatedData.length > 0 ? (
           paginatedData.map((row, index) => (
             <tr key={index} className="hover:bg-gray-900">
+              <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.id || "N/A"}</td>
               <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.customer_name || "N/A"}</td>
               <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.contact_number}</td>
               <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{row.alternate_number || "N/A"}</td>

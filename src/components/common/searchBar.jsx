@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 
 const SearchBar = ({
   searchTerm,
+  searchBarDisplay,
   setSearchTerm,
   fromDate,
   toDate,
@@ -17,6 +18,7 @@ const SearchBar = ({
       setFromDate(selected);
     }
   };
+  console.log(searchBarDisplay,"searchBarDisplay")
 
   const handleToDateChange = (e) => {
     const selected = e.target.value;
@@ -29,7 +31,7 @@ const SearchBar = ({
     <div className="flex sm:flex-row flex-wrap items-end gap-4  pb-6">
 
       {/* Search Input */}
-      <div className="relative w-full sm:w-40 md:w-64">
+      <div className={`relative w-full sm:w-40 md:w-64 ${searchBarDisplay?"hidden":"block"}`}>
         <input
           type="text"
           value={searchTerm}
