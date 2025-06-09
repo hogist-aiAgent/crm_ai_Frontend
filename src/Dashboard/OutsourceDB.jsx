@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { BiRefresh } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FaFilter } from "react-icons/fa";
+import { FaCheckCircle, FaDatabase, FaFilter, FaFire, FaHourglassStart, FaLock, FaPhoneAlt, FaSnowflake, FaUserPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import SearchBar from "../components/common/searchBar";
 import { PhoneIcon, PhoneXMarkIcon } from '@heroicons/react/24/solid';
 import StatusSummaryCards from "../components/common/DashboardCard";
-import CallStatusBarChart from "../components/common/ChartReports";
 import ToggleButtonGroup from "../components/common/ToggleButton";
+import StatusBarChart from "../components/common/ChartReports";
 export const OutsourceDB = () => {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -247,8 +247,30 @@ const filteredData = tableData.filter((row) => {
           activeView==="dashboard"&& 
 
       <div className="p-1 pb-3">
-      <StatusSummaryCards data={filteredData} />
-<CallStatusBarChart data={tableData} />
+<StatusSummaryCards
+  data={filteredData}
+  statusField="status"
+  config={[
+    { label: "New", key: "new", color: "bg-indigo-700", icon: <FaUserPlus /> },
+    { label: "Pending", key: "pending", color: "bg-yellow-600", icon: <FaPhoneAlt /> },
+    { label: "Called", key: "called", color: "bg-emerald-700", icon: <FaCheckCircle /> },
+    { label: "Initiated", key: "initiated", color: "bg-orange-600", icon: <FaHourglassStart /> },
+    { label: "All", key: "all", color: "bg-gray-800", icon: <FaDatabase /> },
+  ]}
+/>
+
+
+<StatusBarChart
+  data={tableData}
+  statusField="status"
+  statusConfig={[
+    { key: "new", label: "New", color: "#6366f1" },
+    { key: "pending", label: "Pending", color: "#facc15" },
+    { key: "called", label: "Called", color: "#10b981" },
+    { key: "initiated", label: "Initiated", color: "#f97316" },
+  ]}
+/>
+
 
       </div>
         

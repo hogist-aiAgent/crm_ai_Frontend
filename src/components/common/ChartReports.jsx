@@ -11,9 +11,14 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const CallStatusBarChart = ({ data }) => {
-  const statusTypes = ["new", "pending", "called", "initiated"];
-
+/**
+ * @param {{
+ *   data: any[],
+ *   statusField: string,
+ *   statusConfig: { key: string, label: string, color: string }[]
+ * }} props
+ */
+const StatusBarChart = ({ data, statusField = "status", statusConfig }) => {
   const monthMap = new Map();
 
   data.forEach((item) => {
@@ -26,12 +31,13 @@ const CallStatusBarChart = ({ data }) => {
     if (!monthMap.has(monthLabel)) {
       monthMap.set(monthLabel, {
         sortKey,
-        counts: { new: 0, pending: 0, called: 0, initiated: 0 },
+        counts: Object.fromEntries(statusConfig.map(({ key }) => [key, 0])),
       });
     }
 
-    const status = item.status?.toLowerCase();
-    if (statusTypes.includes(status)) {
+    const status = item[statusField]?.toLowerCase();
+    const configKeys = statusConfig.map(({ key }) => key);
+    if (configKeys.includes(status)) {
       monthMap.get(monthLabel).counts[status]++;
     }
   });
@@ -51,10 +57,10 @@ const CallStatusBarChart = ({ data }) => {
 
   const chartData = {
     labels: filteredMonths,
-    datasets: statusTypes.map((status, idx) => ({
-      label: status.charAt(0).toUpperCase() + status.slice(1),
-      data: filteredMonths.map((month) => monthlyStatusCounts[month]?.[status] || 0),
-      backgroundColor: ["#6366f1", "#facc15", "#10b981", "#f97316"][idx], // Added orange for "initiated"
+    datasets: statusConfig.map(({ key, label, color }) => ({
+      label,
+      data: filteredMonths.map((month) => monthlyStatusCounts[month]?.[key] || 0),
+      backgroundColor: color,
     })),
   };
 
@@ -70,7 +76,7 @@ const CallStatusBarChart = ({ data }) => {
       y: {
         beginAtZero: true,
         ticks: { color: "#d1d5db" },
-        title: { display: true, text: "Number of Calls", color: "#e5e7eb" },
+        title: { display: true, text: "Number of Leads", color: "#e5e7eb" },
       },
     },
   };
@@ -78,7 +84,7 @@ const CallStatusBarChart = ({ data }) => {
   return (
     <div className="mt-8 bg-gray-900 rounded-lg shadow-md p-4 md:p-6 text-white w-full">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-        <h2 className="text-lg font-semibold">Month-wise Call Status</h2>
+        <h2 className="text-lg font-semibold">Month-wise Lead Summary</h2>
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
@@ -100,5 +106,4 @@ const CallStatusBarChart = ({ data }) => {
   );
 };
 
-
-export default CallStatusBarChart;
+export default StatusBarChart;

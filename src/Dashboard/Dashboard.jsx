@@ -10,6 +10,8 @@ import { FaTable, FaTableList } from "react-icons/fa6";
 import { FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { WhatsappChatBot } from "./WhatsappChatBot";
+import { BsFillChatLeftDotsFill } from "react-icons/bs";
+import { UserChartConversation } from "./UserChatConversation";
 
 
 
@@ -72,28 +74,30 @@ const Dashboard = () => {
     //     }
     // };
 
-    const sidebarItems = [
-        { id: "home", label: "Home", icon: <FaHome size={18} /> },
+    const sidebarItems = [ { id: "home", label: "Home", icon: <FaHome size={18} /> },
         { id: "upload", label: "Upload", icon: <FaUpload size={18} /> },
         { id: "b2b", label: "B2B", icon: <FaTable size={18} /> },
         { id: "b2c", label: "B2C", icon: <FaTableList size={18} /> },
         { id: "outsource", label: "OutSourceDB", icon: <FaDatabase size={18} /> },
         { id: "chatbot", label: "Chatbot", icon: <FaComments size={18} /> },
+        { id: "User Chat", label: "Transcript", icon: <BsFillChatLeftDotsFill  size={18} /> },
+       
     ];
 
     return (
         <>
             <div className="flex w-screen overflow-visible justify-start items-start ibm">
                 {/* Laptop Sidebar - remains unchanged */}
-                <div className={`hidden md:flex text-white flex-col justify-between px-2  fixed z-30 h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-22' : 'w-56'} overflow-hidden`}>
-                    <div className="flex flex-col flex-grow gap-6 my-5 ml-4 overflow-visible justify-between bg-gray-800 rounded-2xl ">
-                        <div className="flex flex-col flex-grow gap-3">
-                            <div className="flex px-2 items-center justify-start gap-2 py-4 cursor-pointer">
+                <div className={`hidden md:flex  text-white flex-col justify-between px-2  fixed z-30 h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-22' : 'w-56'} overflow-hidden`}>
+             <div   style={{ scrollbarWidth: "none", msOverflowStyle: "none" }} className="flex  flex-col flex-grow gap-6 my-5 ml-4 overflow-x-hidden overflow-y-scroll justify-between bg-gray-800 rounded-2xl scrollbar-hide">
+
+                        <div className="flex  flex-col flex-grow gap-3  ">
+                            <div  className="flex fixed bg-gray-800 z-10  px-2 rounded-t-2xl items-center justify-start gap-2 py-4 cursor-pointer">
                                 <img src={logo} alt="Logo" className="w-10" />
                                 {!isCollapsed && <span className="text-xl font-bold">Hogist</span>}
                             </div>
 
-                            <button className="py-2  pl-4 flex items-center justify-start gap-4 mb-4 cursor-pointer border-l-4 border-gray-800" onClick={() => setIsCollapsed(!isCollapsed)}>
+                            <button className="py-2 mt-15 pl-4 flex items-center justify-start gap-4 mb- cursor-pointer border-l-4 border-gray-800" onClick={() => setIsCollapsed(!isCollapsed)}>
                                 <span className="transition-all duration-300 ease-in-out transform" >
                                     {isCollapsed ? <FaChevronRight size={18} /> : <FaChevronLeft size={18} />}
                                 </span>
@@ -104,7 +108,7 @@ const Dashboard = () => {
                                     Close
                                 </span>
                             </button>
-                            <div className="flex flex-col gap-5 ">
+                            <div className="flex flex-col gap-5  ">
                                 {sidebarItems.map(({ id, label, icon }) => (
                                     <button
                                         key={id}
@@ -197,7 +201,7 @@ const Dashboard = () => {
                                 <img src={logo} alt="Logo" className="w-10" />
                                 <span className="text-xl font-bold">Hogist</span>
                             </div>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 ">
                                 {sidebarItems.map(({ id, label, icon }) => (
                                     <button
                                         key={id}
@@ -222,7 +226,7 @@ const Dashboard = () => {
                     </div>
                 )}
 
-                {/* Main Content Area */}
+             
                 <div className={`flex flex-col h-screen bg-black transition-all duration-300 overflow-hidden ease-in-out w-full ${isCollapsed ? 'md:ml-[4rem]' : 'md:ml-[12rem]'}`}>
                     <div className=" px-4 sm:px-6 md:px-8 overflow-auto text-white  h-full">
                         {activeSection === "upload" && <UploadFile />}
@@ -231,6 +235,8 @@ const Dashboard = () => {
                         {activeSection === "b2c" && <B2C />}
                         {activeSection === "outsource" && <OutsourceDB />}
                         {activeSection === "chatbot" && <WhatsappChatBot />}
+                        {activeSection==="User Chat"&&<UserChartConversation/>}
+                        
                     </div>
                 </div>
             </div>

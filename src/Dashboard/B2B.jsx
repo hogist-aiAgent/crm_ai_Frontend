@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaArrowDown, FaArrowUp, FaFilter } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaDatabase, FaFilter, FaFire, FaHourglassStart, FaSnowflake } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import SearchBar from "../components/common/searchBar";
@@ -12,6 +12,9 @@ import {
   FaSpinner,
   FaInfoCircle,
 } from "react-icons/fa";
+import StatusSummaryCards from "../components/common/DashboardCard";
+import StatusBarChart from "../components/common/ChartReports";
+import ToggleButtonGroup from "../components/common/ToggleButton";
 
 export const B2B = () => {
   const [tableData, setTableData] = useState([]);
@@ -28,7 +31,7 @@ export const B2B = () => {
 const [toDate, setToDate] = useState("");
 const [editingRemark, setEditingRemark] = useState(null);
 const [newRemarkValue, setNewRemarkValue] = useState("");
-
+const [activeView, setActiveView] = useState('table');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTracking, setSelectedTracking] = useState(null);
   const itemsPerPage = 50;
@@ -36,7 +39,9 @@ useEffect(()=>{if(searchTerm){
   setCurrentPage(1)
 }},[searchTerm])
 
-
+useEffect(()=>{
+setSearchTerm("")
+},[activeView])
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -288,11 +293,13 @@ const filteredData = tableData.filter((row) => {
       <h1 className="font-bold text-4xl text-green-600 text-center py-5">
         B2B
       </h1>
-
-      <div className="flex flex-wrap items-center gap-4 ">
+        <div className={`${activeView!=="table"?"flex items-center gap-3 flex-wrap":""}`}>
+           <ToggleButtonGroup active={activeView} setActive={setActiveView} />
+         <div className="flex flex-wrap items-center gap-4 ">
         <button
+
           onClick={() => exportToExcel(filteredData, "B2B_Leads")}
-          className="bg-green-600 text-white px-4 py-[5.5px]  rounded hover:bg-green-700"
+          className={`bg-green-600 text-white px-4 py-[5.5px]  rounded hover:bg-green-700 ${  activeView==="table"?"block":"hidden"}`}
         >
           Export file
         </button>
@@ -324,6 +331,7 @@ const filteredData = tableData.filter((row) => {
         </div>
 
    <SearchBar
+   searchBarDisplay={activeView!=="table"}
   searchTerm={searchTerm}
   setSearchTerm={setSearchTerm}
   fromDate={fromDate}
@@ -334,6 +342,40 @@ const filteredData = tableData.filter((row) => {
 
 
       </div>
+        </div>
+         {
+          activeView!=="table"&&(
+            <>
+            <StatusSummaryCards
+  data={filteredData}
+  statusField="lead_status"
+  config={[
+    { label: "Hot", key: "hot", color: "bg-red-500", icon: <FaFire /> },
+    { label: "Warm", key: "warm", color: "bg-orange-400", icon: <FaHourglassStart /> },
+    { label: "Cold", key: "cold", color: "bg-blue-500", icon: <FaSnowflake /> },
+    { label: "Not Interested", key: "not interested", color: "bg-gray-500", icon: <FaLock /> },
+    { label: "All", key: "all", color: "bg-gray-800", icon: <FaDatabase /> },
+  ]}
+/>
+
+<StatusBarChart
+  data={tableData}
+  statusField="lead_status"
+  statusConfig={[
+    { key: "hot", label: "Hot", color: "#dc2626" },
+    { key: "warm", label: "Warm", color: "#fb923c" },
+    { key: "cold", label: "Cold", color: "#3b82f6" },
+    { key: "not interested", label: "Not Interested", color: "#6b7280" },
+  ]}
+/>
+            </>
+          )
+         }
+
+{
+  activeView==="table"&&(
+    <>
+     
 
       <div className="overflow-x-auto">
         <div className="h-[73vh] border-2 border-gray-800 overflow-y-auto">
@@ -421,12 +463,27 @@ const filteredData = tableData.filter((row) => {
                       const value = row[key];
                       if (key === "lead_status")
                         return (
-                          <td
-                            key={idx}
-                            className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap"
-                          >
-                            {getStatusBadge(value)}
-                          </td>
+                            <td className="px-3 py-5 text-sm text-gray-200 whitespace-nowrap">{getStatusBadge(row.lead_status)}</td>
+                        );
+                      if (key === "lead_score")
+                        return (
+                            <td className="px-3 py-5 text-sm whitespace-nowrap">
+                <span
+                  className={`px-3 py-1 rounded-full text-white text-xs font-semibold ${
+                    row.lead_status?.toLowerCase() === "hot"
+                      ? "bg-green-600"
+                      : row.lead_status?.toLowerCase() === "warm"
+                      ? "bg-orange-400"
+                      : row.lead_status?.toLowerCase() === "cold"
+                      ? "bg-red-700"
+                      : row.lead_status?.toLowerCase() === "not interested"
+                      ? "bg-gray-500"
+                      : "bg-gray-600"
+                  }`}
+                >
+                  {row.lead_score !== undefined && row.lead_score !== null ? row.lead_score : "N/A"}
+                </span>
+              </td>
                         );
                         if (key === "remark") {
   return (
@@ -731,6 +788,10 @@ const filteredData = tableData.filter((row) => {
           </div>
         </div>
       )}
+    </>
+  )
+}
+     
     </div>
   );
 };

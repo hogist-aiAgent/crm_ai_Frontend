@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { FaArrowDown, FaArrowUp, FaFilter } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaDatabase, FaFilter, FaFire, FaHourglassStart, FaLock, FaSnowflake } from "react-icons/fa";
 import SearchBar from "../components/common/searchBar";
+import StatusSummaryCards from "../components/common/DashboardCard";
+import StatusBarChart from "../components/common/ChartReports";
+
+import ToggleButtonGroup from "../components/common/ToggleButton";
 
 export const B2C = () => {
   const [tableData, setTableData] = useState([]);
@@ -19,7 +23,7 @@ export const B2C = () => {
 const [toDate, setToDate] = useState("");
 const [editingRemark, setEditingRemark] = useState(null);
 const [newRemarkValue, setNewRemarkValue] = useState("");
-
+const [activeView, setActiveView] = useState('table');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 50;
 
@@ -31,6 +35,16 @@ const [newRemarkValue, setNewRemarkValue] = useState("");
     const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(dataBlob, `${fileName}.xlsx`);
   };
+
+useEffect(()=>{
+setSearchTerm("")
+},[activeView])
+
+
+
+
+
+
 const handleRemarkUpdate = async (row) => {
 
   try {
@@ -217,11 +231,13 @@ const filteredData = tableData.filter((row) => {
   return (
     <div className="px-4 pt-5 ibm">
       <h1 className="font-bold text-4xl text-green-600 text-center py-5">B2C</h1>
-      
+    <div className={`${activeView!=="table"?"flex items-center gap-3 flex-wrap":""}`}>
+         <ToggleButtonGroup active={activeView} setActive={setActiveView} />
+    
       <div className="flex flex-wrap items-center gap-4 ">
         <button
           onClick={() => exportToExcel(filteredData, "B2C_Leads")}
-          className="bg-green-600 text-white px-4 py-[6px] rounded hover:bg-green-700"
+          className={`bg-green-600 text-white px-4 py-[6px] rounded hover:bg-green-700 ${  activeView==="table"?"block":"hidden"}`}
         >
           Export file
         </button>
@@ -235,7 +251,7 @@ const filteredData = tableData.filter((row) => {
            setToDate("")
         }}
         className="cursor-pointer appearance-none w-full rounded border border-white bg-black text-white py-[6px] px-4 pr-8"
-    >
+    > 
         <option value="year" className="bg-black">This Year</option>
         <option value="month" className="bg-black">This Month</option>
         <option value="today" className="bg-black">Today</option>
@@ -247,9 +263,9 @@ const filteredData = tableData.filter((row) => {
     </div>
 </div>
 
-
          <SearchBar
   searchTerm={searchTerm}
+     searchBarDisplay={activeView!=="table"}
   setSearchTerm={setSearchTerm}
   fromDate={fromDate}
   toDate={toDate}
@@ -257,8 +273,37 @@ const filteredData = tableData.filter((row) => {
   setToDate={setToDate}
 />
       </div>
+    
+    </div>
+      {
+        activeView!=="table"&&<div className="mb-5">
+          <StatusSummaryCards
+  data={filteredData}
+  statusField="lead_status"
+  config={[
+    { label: "Hot", key: "hot", color: "bg-red-500", icon: <FaFire /> },
+    { label: "Warm", key: "warm", color: "bg-orange-400", icon: <FaHourglassStart /> },
+    { label: "Cold", key: "cold", color: "bg-blue-500", icon: <FaSnowflake /> },
+    { label: "Not Interested", key: "not interested", color: "bg-gray-500", icon: <FaLock /> },
+    { label: "All", key: "all", color: "bg-gray-800", icon: <FaDatabase /> },
+  ]}
+/>
 
-  <div className="overflow-x-auto">
+<StatusBarChart
+  data={tableData}
+  statusField="lead_status"
+  statusConfig={[
+    { key: "hot", label: "Hot", color: "#dc2626" },
+    { key: "warm", label: "Warm", color: "#fb923c" },
+    { key: "cold", label: "Cold", color: "#3b82f6" },
+    { key: "not interested", label: "Not Interested", color: "#6b7280" },
+  ]}
+/>
+        </div>
+      }
+{
+    activeView==="table"&&(<>
+      <div className="overflow-x-auto">
   <div className="h-[73vh] overflow-y-auto border-2 border-gray-800">
     <table className="w-full min-w-[1200px]">
       <thead className="bg-gray-800 sticky top-0 z-10">
@@ -519,6 +564,10 @@ const filteredData = tableData.filter((row) => {
           Next
         </button>
       </div>
+    
+    </>)
+}
+
     </div>
   );
 };
