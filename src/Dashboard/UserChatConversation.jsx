@@ -77,7 +77,7 @@ export const UserChartConversation = () => {
                 return;
             }
 
-            const convRes = await fetch(`https://hogist.com/food-api/get_transcript_audio_by_call/${idData.call_id}`);
+            const convRes = await fetch(`https://hogist.com/food-api/get_transcript_audio_by_call/${idData.call_id}/`);
             const convData = await convRes.json();
 
             if (convData?.error) {
