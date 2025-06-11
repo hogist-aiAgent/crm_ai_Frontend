@@ -79,7 +79,7 @@ export const UserChartConversation = () => {
 
             const convRes = await fetch(`https://hogist.com/food-api/get_transcript_audio_by_call/${idData.call_id}/`);
             const convData = await convRes.json();
-
+//test
             if (convData?.error) {
                 setMessages([{ sender: "model", message: `⚠️ ${convData.error}` }]);
                 setLoading(false);
