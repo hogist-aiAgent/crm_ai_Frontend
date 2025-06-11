@@ -345,7 +345,7 @@ const filteredData = tableData.filter((row) => {
         </div>
          {
           activeView!=="table"&&(
-            <>
+            <div className='mb-5'>
             <StatusSummaryCards
   data={filteredData}
   statusField="lead_status"
@@ -353,7 +353,7 @@ const filteredData = tableData.filter((row) => {
     { label: "Hot", key: "hot", color: "bg-red-500", icon: <FaFire /> },
     { label: "Warm", key: "warm", color: "bg-orange-400", icon: <FaHourglassStart /> },
     { label: "Cold", key: "cold", color: "bg-blue-500", icon: <FaSnowflake /> },
-    { label: "Not Interested", key: "not interested", color: "bg-gray-500", icon: <FaLock /> },
+    { label: "Not Interested", key: "not interested", color: "bg-gray-500z", icon: <FaLock /> },
     { label: "All", key: "all", color: "bg-gray-800", icon: <FaDatabase /> },
   ]}
 />
@@ -368,7 +368,7 @@ const filteredData = tableData.filter((row) => {
     { key: "not interested", label: "Not Interested", color: "#6b7280" },
   ]}
 />
-            </>
+            </div>
           )
          }
 
@@ -485,7 +485,7 @@ const filteredData = tableData.filter((row) => {
                 </span>
               </td>
                         );
-                        if (key === "remark") {
+   if (key === "remark") {
   return (
     <td
       key={idx}
