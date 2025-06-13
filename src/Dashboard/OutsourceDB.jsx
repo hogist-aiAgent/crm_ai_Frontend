@@ -11,10 +11,11 @@ import StatusSummaryCards from "../components/common/DashboardCard";
 import ToggleButtonGroup from "../components/common/ToggleButton";
 import StatusBarChart from "../components/common/ChartReports";
 export const OutsourceDB = () => {
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("year");
+  const [filter, setFilter] = useState("");
   const [start, setStart] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState([]);
@@ -57,7 +58,7 @@ useEffect(()=>{if(searchTerm){
     setStart(true);
 
     try {
-      const response = await fetch("https://hogist.com/food-api/call-ai-agent/", {
+      const response = await fetch(`${BASE_URL}/call-ai-agent/`, {
         method: "GET",
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -88,7 +89,7 @@ useEffect(()=>{if(searchTerm){
     }
 
     try {
-      const response = await fetch("https://hogist.com/food-api/stop-call/", {
+      const response = await fetch(`${BASE_URL}/stop-call/`, {
         method: "POST",
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -112,7 +113,7 @@ useEffect(()=>{if(searchTerm){
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("https://hogist.com/food-api/outsource/", {
+      const response = await fetch(`${BASE_URL}/outsource/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -136,11 +137,17 @@ useEffect(()=>{
 setSearchTerm("")
   
 },[activeView])
+useEffect(()=>{
+  if(fromDate||toDate){
+    setFilter("")
+  }
+
+},[fromDate,toDate])
   const deleteLead = async (phone) => {
     if (!window.confirm("Are you sure you want to delete this lead?")) return;
 
     try {
-      const response = await fetch("https://hogist.com/food-api/delete-outsource-lead/", {
+      const response = await fetch(`${BASE_URL}/delete-outsource-lead/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -299,6 +306,7 @@ const filteredData = tableData.filter((row) => {
                 setFilter(e.target.value)}}
               className="cursor-pointer appearance-none w-full rounded border border-white bg-black text-white py-[6px] px-4 pr-8"
             >
+              <option value="" className="bg-black">All</option>
               <option value="year" className="bg-black">This Year</option>
               <option value="month" className="bg-black">This Month</option>
               <option value="today" className="bg-black">Today</option>

@@ -11,7 +11,7 @@ const UploadFile = () => {
     message: '',
     variant: 'error',
   });
-
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [duplicates, setDuplicates] = useState([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
@@ -48,7 +48,7 @@ const UploadFile = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://hogist.com/food-api/upload_excel/", {
+      const response = await fetch(`${BASE_URL}/upload_excel/`, {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -68,7 +68,7 @@ const UploadFile = () => {
 
         setFile(null);
       } else {
-        await response.text(); // read it for completeness
+        await response.text(); 
         showSnackbar(" Upload failed. Please check the file format.");
       }
     } catch (error) {

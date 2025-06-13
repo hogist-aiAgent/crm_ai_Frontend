@@ -21,11 +21,12 @@ export const B2B = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
-  const [filter, setFilter] = useState("year");
+  const [filter, setFilter] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [editingStatus, setEditingStatus] = useState(null);
   const [newStatusValue, setNewStatusValue] = useState("");
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [searchTerm, setSearchTerm] = useState("");
   const [fromDate, setFromDate] = useState("");
 const [toDate, setToDate] = useState("");
@@ -75,7 +76,7 @@ const handleRemarkUpdate = async (row) => {
       remark: newRemarkValue,
     };
 
-    const response = await fetch("https://hogist.com/food-api/update_remark/", {
+    const response = await fetch(`${BASE_URL}/update_remark/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +95,7 @@ const handleRemarkUpdate = async (row) => {
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
 
-    const updatedDataResponse = await fetch("https://hogist.com/food-api/get_b2b/");
+    const updatedDataResponse = await fetch(`${BASE_URL}/get_b2b/`);
     const updatedData = await updatedDataResponse.json();
     setTableData(updatedData);
     setEditingRemark(null);
@@ -108,7 +109,7 @@ const handleRemarkUpdate = async (row) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://hogist.com/food-api/get_b2b/", {
+        const response = await fetch(`${BASE_URL}/get_b2b/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -127,6 +128,11 @@ const handleRemarkUpdate = async (row) => {
     fetchData();
   }, []);
 
+useEffect(()=>{
+  if(fromDate||toDate){
+    setFilter("")
+  }
+},[fromDate,toDate])
   const handleSort = () => {
     const sortedData = [...tableData].sort((a, b) => {
       const scoreA = a.lead_score || 0;
@@ -151,7 +157,6 @@ const filteredData = tableData.filter((row) => {
     dateMatch = createdData.getFullYear() === now.getFullYear();
   }
 
-  // Filter by fromDate and toDate if provided
   if (fromDate) {
     const from = new Date(fromDate);
     dateMatch = dateMatch && createdData >= from;
@@ -211,7 +216,7 @@ const filteredData = tableData.filter((row) => {
       };
 
       const response = await fetch(
-        "https://hogist.com/food-api/update-lead-status/",
+        `${BASE_URL}/update-lead-status/`,
         {
           method: "POST",
           headers: {
@@ -235,7 +240,7 @@ const filteredData = tableData.filter((row) => {
       }
 
       const updatedDataResponse = await fetch(
-        "https://hogist.com/food-api/get_b2b/"
+        `${BASE_URL}/get_b2b/`
       );
       const updatedData = await updatedDataResponse.json();
       setTableData(updatedData);
@@ -313,6 +318,9 @@ const filteredData = tableData.filter((row) => {
               setFilter(e.target.value)}}
             className="cursor-pointer appearance-none w-full rounded border border-white bg-black text-white py-[6px] px-4 pr-8"
           >
+                <option value="" className="bg-black">
+              All
+            </option>
             <option value="year" className="bg-black">
               This Year
             </option>

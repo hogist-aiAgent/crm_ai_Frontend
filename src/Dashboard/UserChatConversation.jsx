@@ -5,6 +5,8 @@ import { FiMessageSquare, FiArrowLeft } from 'react-icons/fi';
 
 export const UserChartConversation = () => {
     const [contacts, setContacts] = useState([]);
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedNumber, setSelectedNumber] = useState(null);
@@ -31,7 +33,7 @@ export const UserChartConversation = () => {
     useEffect(() => {
         const fetchContacts = async () => {
             try {
-                const res = await fetch("https://hogist.com/food-api/outsource/");
+                const res = await fetch(`${BASE_URL}/outsource/`);
                 const data = await res.json();
                 const cleaned = data.filter((data)=>data.status==="called"||data.status==="initiated").map((entry) => ({
                     contact_number: entry.contact_number || "none"
@@ -65,10 +67,7 @@ export const UserChartConversation = () => {
         setAudioURL(null);
 
         try {
-//        https://hogist.com/food-api/get_latest_call_id_by_number/9677240444/
-
-// https://hogist.com/food-api/get_transcript_audio_by_call/50db60bc-d41e-47ca-af02-3489eacd1bdc/
-            const idRes = await fetch(`https://hogist.com/food-api/get_latest_call_id_by_number/+91${contact.contact_number}/`);
+            const idRes = await fetch(`${BASE_URL}/get_latest_call_id_by_number/+91${contact.contact_number}/`);
             const idData = await idRes.json();
 
             if (!idData.call_id) {
@@ -77,7 +76,7 @@ export const UserChartConversation = () => {
                 return;
             }
 
-            const convRes = await fetch(`https://hogist.com/food-api/get_transcript_audio_by_call/${idData.call_id}/`);
+            const convRes = await fetch(`${BASE_URL}/get_transcript_audio_by_call/${idData.call_id}/`);
             const convData = await convRes.json();
 //test
             if (convData?.error) {

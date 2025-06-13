@@ -16,6 +16,7 @@ import { UserChartConversation } from "./UserChatConversation";
 
 
 const Dashboard = () => {
+       const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [activeSection, setActiveSection] = useState("home");
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isActive, setIsActive] = useState(false);
@@ -56,7 +57,7 @@ const Dashboard = () => {
 
     // const HandlefetchData = async () => {
     //     try {
-    //         const response = await fetch("https://hogist.com/food-api/fetch-bot-leads/", {
+    //         const response = await fetch(`${BASE_URL}/fetch-bot-leads/`, {
     //             method: "GET",
     //             headers: {
     //                 "ngrok-skip-browser-warning": "true"
@@ -87,7 +88,7 @@ const Dashboard = () => {
     return (
         <>
             <div className="flex w-screen overflow-visible justify-start items-start ibm">
-                {/* Laptop Sidebar - remains unchanged */}
+             
                 <div className={`hidden md:flex  text-white flex-col justify-between px-2  fixed z-30 h-screen transition-all duration-300 ease-in-out ${isCollapsed ? 'w-22' : 'w-56'} overflow-hidden`}>
              <div   style={{ scrollbarWidth: "none", msOverflowStyle: "none" }} className="flex  flex-col flex-grow gap-6 my-5 ml-4 overflow-x-hidden overflow-y-scroll justify-between bg-gray-800 rounded-2xl scrollbar-hide">
 

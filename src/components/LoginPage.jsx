@@ -14,13 +14,13 @@ export const LoginPage = ({ setIsAuthenticated }) => {
     const [timer, setTimer] = useState(600);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
+const BASE_URL = import.meta.env.VITE_BASE_URL;
     const sendOtp = async () => {
         setLoading(true);
         setError("");
         setSuccess("");
         try {
-            const res = await fetch("https://hogist.com/food-api/send-otp/", {
+            const res = await fetch(`${BASE_URL}/send-otp/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
@@ -43,7 +43,7 @@ export const LoginPage = ({ setIsAuthenticated }) => {
         setLoading(true);
         setError("");
         try {
-            const res = await fetch("https://hogist.com/food-api/verify-otp/", {
+            const res = await fetch(`${BASE_URL}/verify-otp/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, otp }),
