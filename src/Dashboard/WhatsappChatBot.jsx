@@ -10,7 +10,7 @@ export const WhatsappChatBot = () => {
     useEffect(() => {
         const fetchAllChats = async () => {
             try {
-                const res = await fetch("https://hogist.com/app/get-all-chats/",{
+                const res = await fetch("https://hogist.in/app/get-all-chats/",{
                     method: "GET",
                     headers: {
                       'Content-Type': 'application/json',

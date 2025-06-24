@@ -97,7 +97,7 @@ const handleRemarkUpdate = async (row) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/get_b2c/`, {
+        const response = await fetch(`${BASE_URL}/get_b2c/?page=1&page_size=100000`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -105,7 +105,7 @@ const handleRemarkUpdate = async (row) => {
           },
         });
         const res = await response.json();
-        setTableData(Array.isArray(res) ? res : []);
+        setTableData(Array.isArray(res.leads) ? res.leads : []);
       } catch (err) {
         setError(err.message || "Failed to load data.");
       } finally {

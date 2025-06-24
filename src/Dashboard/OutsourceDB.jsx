@@ -113,7 +113,7 @@ useEffect(()=>{if(searchTerm){
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/outsource/`, {
+      const response = await fetch(`${BASE_URL}/outsource/?page=1&page_size=100000`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +121,7 @@ useEffect(()=>{if(searchTerm){
         },
       });
       const res = await response.json();
-      setTableData(Array.isArray(res) ? res : []);
+      setTableData(Array.isArray(res.leads) ? res.leads : []);
     } catch (err) {
       console.error("Error fetching data:", err);
       setError(err.message || "Failed to load data.");

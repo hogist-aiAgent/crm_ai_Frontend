@@ -54,6 +54,44 @@ setSearchTerm("")
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [editingStatus]);
+const generatePaginationRange = () => {
+  const totalPageNumbersToShow = 7;
+
+  if (totalPages <= totalPageNumbersToShow) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const leftSiblingIndex = Math.max(currentPage - 1, 1);
+  const rightSiblingIndex = Math.min(currentPage + 1, totalPages);
+
+  const showLeftEllipsis = leftSiblingIndex > 2;
+  const showRightEllipsis = rightSiblingIndex < totalPages - 1;
+
+  const firstPageIndex = 1;
+  const lastPageIndex = totalPages;
+
+  const pagination = [];
+
+  pagination.push(firstPageIndex);
+
+  if (showLeftEllipsis) {
+    pagination.push("...");
+  }
+
+  for (let i = leftSiblingIndex; i <= rightSiblingIndex; i++) {
+    if (i !== firstPageIndex && i !== lastPageIndex) {
+      pagination.push(i);
+    }
+  }
+
+  if (showRightEllipsis) {
+    pagination.push("...");
+  }
+
+  pagination.push(lastPageIndex);
+
+  return pagination;
+};
 
   const exportToExcel = (data, fileName = "ExportedData") => {
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -109,7 +147,7 @@ const handleRemarkUpdate = async (row) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/get_b2b/`, {
+        const response = await fetch(`${BASE_URL}/get_b2b/?page=1&page_size=100000`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -117,7 +155,7 @@ const handleRemarkUpdate = async (row) => {
           },
         });
         const res = await response.json();
-        setTableData(Array.isArray(res) ? res : []);
+        setTableData(Array.isArray(res.leads) ? res.leads : []);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err.message || "Failed to load data.");
@@ -652,19 +690,33 @@ const filteredData = tableData.filter((row) => {
         >
           Prev
         </button>
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === i + 1
-                ? "bg-green-600 text-white"
-                : "bg-gray-700 text-white"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+       {generatePaginationRange().map((page, idx) => {
+  if (page === "...") {
+    return (
+      <span
+        key={`ellipsis-${idx}`}
+        className="px-3 py-1 text-gray-400 select-none"
+      >
+        ...
+      </span>
+    );
+  }
+
+  return (
+    <button
+      key={page}
+      onClick={() => setCurrentPage(page)}
+      className={`px-3 py-1 rounded ${
+        currentPage === page
+          ? "bg-green-600 text-white"
+          : "bg-gray-700 text-white"
+      }`}
+    >
+      {page}
+    </button>
+  );
+})}
+
         <button
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
