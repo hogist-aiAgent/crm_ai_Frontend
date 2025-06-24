@@ -33,9 +33,9 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
     useEffect(() => {
         const fetchContacts = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/outsource/`);
+                const res = await fetch(`${BASE_URL}/outsource/?page=1&page_size=100000`);
                 const data = await res.json();
-                const cleaned = data.filter((data)=>data.status==="called"||data.status==="initiated").map((entry) => ({
+                const cleaned = data.leads.filter((data)=>data.status==="called"||data.status==="initiated").map((entry) => ({
                     contact_number: entry.contact_number || "none"
                 }));
                 console.log(cleaned,data)
